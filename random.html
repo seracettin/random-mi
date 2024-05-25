@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery Number Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="container">
+    <h1 class="text-center mt-5">Lottery Number Generator</h1>
+    <div class="row justify-content-center mt-5">
+
+        <label for="numberType" class="col-4 col-sm-2 text-right">Number Type:</label>
+        <select id="numberType" class="form-control col-4 col-sm-2 mb-3" onchange="generateNumbers()">
+            <option value="random">---select---</option>
+            <option value="random">Random</option>
+            <option value="even">Even</option>
+            <option value="odd">Odd</option>
+            <option value="nine">Sub from 90</option>
+        </select>
+
+
+
+    </div>
+    <div class="row justify-content-center mt-5">
+        <button class="btn btn-warning" onclick="generateNumbers()">Refresh</button>
+    </div>
+    <div class="row justify-content-center mt-8" id="subtractFrom90" style="visibility: hidden;;">
+        <div class="col-4 col-sm-6 col-md-4">
+            <div class=" text-center">
+                <input id="numbersInput" class="form-control mb-3" placeholder="Enter 6 numbers separated by space">
+            </div>
+        </div>
+        <div class="col-4 col-sm-6 col-md-4">
+            <div class="text-center">
+                <button class="btn btn-primary" onclick="subtractFrom90()">Subtract from 90</button>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-8" id="numberContainer">
+        <!-- Numbers will be inserted here -->
+    </div>
+    <div class="row justify-content-center mt-8" id="numberContainer1">
+        <!-- Numbers will be inserted here -->
+    </div>
+    <div class="row justify-content-center mt-8" id="numberContainer3">
+        <!-- Numbers will be inserted here -->
+    </div>
+</div>
+<script>
+    function generateNumbers() {
+        const numberContainer = document.getElementById('numberContainer');
+        const numberContainer1 = document.getElementById('numberContainer1');
+        const numberContainer3 = document.getElementById('numberContainer3');
+        const numberType = document.getElementById('numberType').value;
+        numberContainer.innerHTML = '';
+        numberContainer1.innerHTML = '';
+        numberContainer3.innerHTML = '';
+        if (numberType === 'nine') {
+
+            document.getElementById('subtractFrom90').style.visibility = 'visible';
+            return;
+        } else {
+            document.getElementById('subtractFrom90').style.visibility = 'hidden';
+        }
+        for (let i = 0; i < 3; i++) {
+            let number;
+            do {
+                number = Math.floor(Math.random() * 90) + 1;
+            } while ((numberType === 'even' && number % 2 !== 0) || (numberType === 'odd' && number % 2 === 0));
+
+            const numberBox = document.createElement('div');
+            numberBox.className = 'col-4 col-sm-2 mt-3';
+            numberBox.innerHTML = `
+                <div class="card text-center">
+                    <div class="card-header">
+                        ${i + 1}th
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${number}</h5>
+                    </div>
+                </div>
+            `;
+            numberContainer.appendChild(numberBox);
+        }
+        for (let i = 3; i < 6; i++) {
+            let number;
+            do {
+                number = Math.floor(Math.random() * 90) + 1;
+            } while ((numberType === 'even' && number % 2 !== 0) || (numberType === 'odd' && number % 2 === 0));
+
+            const numberBox = document.createElement('div');
+            numberBox.className = 'col-4 col-sm-2 mt-3';
+            numberBox.innerHTML = `
+                <div class="card text-center">
+                    <div class="card-header">
+                        ${i + 1}th
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${number}</h5>
+                    </div>
+                </div>
+            `;
+            numberContainer1.appendChild(numberBox);
+        }
+        let superNumber;
+        do {
+            superNumber = Math.floor(Math.random() * 90) + 1;
+        } while ((numberType === 'even' && superNumber % 2 !== 0) || (numberType === 'odd' && superNumber % 2 === 0));
+
+        const superNumberBox = document.createElement('div');
+        superNumberBox.className = 'col-12 col-sm-2 mt-3';
+        superNumberBox.innerHTML = `
+            <div class="card text-center">
+                <div class="card-header">
+                    Super Number
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">${superNumber}</h5>
+                </div>
+            </div>
+        `;
+        numberContainer3.appendChild(superNumberBox);
+    }
+    function subtractFrom90() {
+        const numbersInput = document.getElementById('numbersInput').value;
+        const numberContainer = document.getElementById('numberContainer');
+        const numberContainer1 = document.getElementById('numberContainer1');
+        const numberContainer3 = document.getElementById('numberContainer3');
+        numberContainer.innerHTML = '';
+        numberContainer1.innerHTML = '';
+        numberContainer3.innerHTML = '';
+
+        const numbers = numbersInput.split(' ').map(Number);
+        if (numbers.length !== 7) {
+            alert('Please enter exactly 6 numbers separated by space.');
+            return;
+        }
+
+        for (let i = 0; i < 3; i++) {
+            const result = 90 - numbers[i];
+            const resultBox = document.createElement('div');
+            resultBox.className = 'col-4 col-sm-2 mt-3';
+            resultBox.innerHTML = `
+                <div class="card text-center">
+                    <div class="card-header">
+                        ${i + 1}th Result
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${result}</h5>
+                    </div>
+                </div>
+            `;
+            numberContainer.appendChild(resultBox);
+        }
+        for (let i = 3; i < 6; i++) {
+            const result = 90 - numbers[i];
+            const resultBox = document.createElement('div');
+            resultBox.className = 'col-4 col-sm-2 mt-3';
+            resultBox.innerHTML = `
+                <div class="card text-center">
+                    <div class="card-header">
+                        ${i + 1}th Result
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${result}</h5>
+                    </div>
+                </div>
+            `;
+            numberContainer1.appendChild(resultBox);
+        }
+        const result = 90 - numbers[6];
+        const resultBox = document.createElement('div');
+        resultBox.className = 'col-4 col-sm-2 mt-3';
+        resultBox.innerHTML = `
+                <div class="card text-center">
+                    <div class="card-header">
+                        Super Result
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${result}</h5>
+                    </div>
+                </div>
+            `;
+        numberContainer3.appendChild(resultBox);
+    }
+</script>
+</body>
+
+</html>
