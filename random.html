@@ -15,7 +15,7 @@
 
         <label for="numberType" class="col-4 col-sm-2 text-right">Number Type:</label>
         <select id="numberType" class="form-control col-4 col-sm-2 mb-3" onchange="generateNumbers()">
-            <option value="random">---select---</option>
+            <option value="select">---select---</option>
             <option value="random">Random</option>
             <option value="even">Even</option>
             <option value="odd">Odd</option>
@@ -27,6 +27,7 @@
     </div>
     <div class="row justify-content-center mt-5">
         <button class="btn btn-warning" onclick="generateNumbers()">Refresh</button>
+        <button class="btn btn-warning" onclick="seven()">7 Refresh</button>
     </div>
     <div class="row justify-content-center mt-8" id="subtractFrom90" style="visibility: hidden;;">
         <div class="col-4 col-sm-6 col-md-4">
@@ -51,6 +52,14 @@
     </div>
 </div>
 <script>
+
+    function seven(){
+        for(let i = 0; i < 7; i++){
+            setTimeout(() => {
+                generateNumbers();
+            }, i * 200);
+        }
+    }
     function generateNumbers() {
         const numberContainer = document.getElementById('numberContainer');
         const numberContainer1 = document.getElementById('numberContainer1');
@@ -59,6 +68,11 @@
         numberContainer.innerHTML = '';
         numberContainer1.innerHTML = '';
         numberContainer3.innerHTML = '';
+        const randomNumbers = new Map();
+        if (numberType === 'select') {
+            return;
+        }
+
         if (numberType === 'nine') {
 
             document.getElementById('subtractFrom90').style.visibility = 'visible';
@@ -66,64 +80,43 @@
         } else {
             document.getElementById('subtractFrom90').style.visibility = 'hidden';
         }
-        for (let i = 0; i < 3; i++) {
-            let number;
-            do {
-                number = Math.floor(Math.random() * 90) + 1;
-            } while ((numberType === 'even' && number % 2 !== 0) || (numberType === 'odd' && number % 2 === 0));
+        while(randomNumbers.size < 7) {
+            const number = Math.floor(Math.random() * 90) + 1;
+            if((numberType === 'even' && number % 2 === 0))
+                addKeyValue(randomNumbers, number, number);
+            else if((numberType === 'odd' && number % 2 !== 0)){
+                addKeyValue(randomNumbers, number, number);
+            }else if(numberType === 'random'){
+                addKeyValue(randomNumbers, number, number);
 
+            }
+        }
+        let lineCount = 0;
+        let mapEntries = Array.from(randomNumbers.entries());
+        mapEntries.sort((a, b) => a[0] - b[0]);
+        for (let [key, value] of mapEntries ){
+             lineCount++;
             const numberBox = document.createElement('div');
             numberBox.className = 'col-4 col-sm-2 mt-3';
             numberBox.innerHTML = `
                 <div class="card text-center">
                     <div class="card-header">
-                        ${i + 1}th
+                        ${lineCount}th
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">${number}</h5>
+                        <h5 class="card-title">${value}</h5>
                     </div>
                 </div>
             `;
-            numberContainer.appendChild(numberBox);
+            if(lineCount < 4)
+                numberContainer.appendChild(numberBox);
+            else if(lineCount < 7)
+                numberContainer1.appendChild(numberBox);
+            else
+                numberContainer3.appendChild(numberBox);
         }
-        for (let i = 3; i < 6; i++) {
-            let number;
-            do {
-                number = Math.floor(Math.random() * 90) + 1;
-            } while ((numberType === 'even' && number % 2 !== 0) || (numberType === 'odd' && number % 2 === 0));
 
-            const numberBox = document.createElement('div');
-            numberBox.className = 'col-4 col-sm-2 mt-3';
-            numberBox.innerHTML = `
-                <div class="card text-center">
-                    <div class="card-header">
-                        ${i + 1}th
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">${number}</h5>
-                    </div>
-                </div>
-            `;
-            numberContainer1.appendChild(numberBox);
-        }
-        let superNumber;
-        do {
-            superNumber = Math.floor(Math.random() * 90) + 1;
-        } while ((numberType === 'even' && superNumber % 2 !== 0) || (numberType === 'odd' && superNumber % 2 === 0));
 
-        const superNumberBox = document.createElement('div');
-        superNumberBox.className = 'col-12 col-sm-2 mt-3';
-        superNumberBox.innerHTML = `
-            <div class="card text-center">
-                <div class="card-header">
-                    Super Number
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">${superNumber}</h5>
-                </div>
-            </div>
-        `;
-        numberContainer3.appendChild(superNumberBox);
     }
     function subtractFrom90() {
         const numbersInput = document.getElementById('numbersInput').value;
@@ -186,6 +179,11 @@
                 </div>
             `;
         numberContainer3.appendChild(resultBox);
+    }
+    function addKeyValue(map, key, value) {
+        if (!map.has(key)) {
+            map.set(key, value);
+        }
     }
 </script>
 </body>
